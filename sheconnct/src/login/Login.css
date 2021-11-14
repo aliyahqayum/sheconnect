@@ -1,0 +1,49 @@
+
+.loginWrapper{
+    height: 92vh;
+    background-color: #BBD0FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15vh;
+}
+
+.loginBox{
+    height: 80vh;
+    width: 30vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 75px;
+    gap: 10px;
+   
+}
+
+.textboxWrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button {
+    width: 10vw;
+    height: 5vh;
+    border-radius: 40px;
+    background-color: #A2A2B1;
+    border-color: #A2A2B1;
+}
+
