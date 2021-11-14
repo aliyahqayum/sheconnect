@@ -13,18 +13,6 @@ module.exports = {
     }
   },
 
-  deleteOne: async (user_id, by_id) => {
-    try {
-      var result = await pool.query({
-        sql: "DELETE FROM likes WHERE user_id = ? AND sender_id = ?",
-        values: [user_id, by_id]
-      });
-      return result.affectedRows;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
   checkUserLikedBy: async (user_id, by_id) => {
     try {
       var result = await pool.query({

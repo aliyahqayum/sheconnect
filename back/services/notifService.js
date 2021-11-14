@@ -30,19 +30,6 @@ module.exports = {
           await userModel.increaseScore(10, target_id);
     },
 
-    dislike: async (user_id, target_id, username) => {
-        await notifModel.deleteOne(target_id, user_id, 1);
-        await notifModel.deleteOne(target_id, user_id, 4);
-        await notifModel.deleteOne(target_id, user_id, 5);
-        await notifModel.addOne([target_id, user_id, username, 4, "just stopped liking your profile..."]);        
-        var score = await userModel.getUserScore(target_id);
-        score = score[0].pop_score;
-        if (score > 9)
-          await userModel.decreaseScore(10, target_id);
-        else  
-          await userModel.resetUserScore(target_id);
-    },
-
     like_back: async (user_id, target_id, username) => {
         await notifModel.deleteOne(target_id, user_id, 4);
         await notifModel.addOne([target_id, user_id, username, 5, "just liked you back!"]);

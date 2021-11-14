@@ -13,7 +13,6 @@ module.exports = {
         body = JSON.parse(body);
         console.log(body.results[0].location);
         for (var k=0;k<body.results.length;k++) {
-            var randomSexuality = randomInt(1, 3);
             var randomPopScore = randomInt(50, 999);
             var bio = "This a sample of a bio =)";
             var uid = await userModel.createFromSeed([
@@ -21,7 +20,6 @@ module.exports = {
                 body.results[k].name.first.charAt(0).toUpperCase()+body.results[k].name.first.substring(1),
                 body.results[k].login.username,
                 body.results[k].gender == 'male' ? 'man' : 'woman',
-                randomSexuality,
                 body.results[k].email,
                 bio,
                 body.results[k].dob.date.substr(0, 10),

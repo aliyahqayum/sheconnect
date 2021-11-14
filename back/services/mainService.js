@@ -117,14 +117,6 @@ module.exports = {
     return score;
   },
 
-  ageToBirthdate: age => {
-    var year = moment().format("YYYY");
-    var tmp = moment().set("year", year - age);
-    var newAge = moment(tmp).format("YYYY");
-
-    return newAge;
-  },
-
   sortWithTags: (dataList, tagsList) => {
     var sortedList = [];
     for (var i = 0; i < dataList.length; i++) {

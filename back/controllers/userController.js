@@ -471,17 +471,6 @@ module.exports = {
     return sendNotif;
   },
 
-  reportUser: async (req, res, next) => {
-    var user_id = req.params.user_id;
-    var target_id = req.params.target_id;
-
-    var result = await userModel.reportUser([target_id, user_id]);
-    if (result)
-      return res.status(200).json({ message: "Successfully reported!" });
-    return res
-      .status(200)
-      .json({ message: "Impossible to report this user for now" });
-  },
 
   getUserRoomId: async (req, res, next) => {
     var user_id = req.params.user_id;
@@ -493,47 +482,7 @@ module.exports = {
 
     return res.status(200).json({ room_id: result[0].room_id });
   },
-
-  checkUserIsReported: async (req, res, next) => {
-    var user_id = req.params.user_id;
-    var target_id = req.params.target_id;
-
-    var result = await userModel.checkUserIsReported(user_id, target_id);
-    return res.status(200).json({ isReported: result });
-  },
-
-  blockUser: async (req, res, next) => {
-    var user_id = req.params.user_id;
-    var target_id = req.params.target_id;
-
-    var result = await userModel.blockUser(user_id, target_id);
-    if (result)
-      return res.status(200).json({ message: "Successfully blocked!" });
-    return res
-      .status(200)
-      .json({ message: "Impossible to block this user for now..." });
-  },
-
-  unblockUser: async (req, res, next) => {
-    var user_id = req.params.user_id;
-    var target_id = req.params.target_id;
-
-    var result = await userModel.unblockUser(user_id, target_id);
-    if (!result)
-      return res.status(200).json({ message: "Successfully unblocked!" });
-    return res
-      .status(200)
-      .json({ message: "Impossible to unblock this user for now..." });
-  },
-
-  checkUserIsBlocked: async (req, res, next) => {
-    var user_id = req.params.user_id;
-    var target_id = req.params.target_id;
-
-    var result = await userModel.checkUserIsBlocked(user_id, target_id);
-    return res.status(200).json({ isBlocked: result });
-  },
-
+  
   getUserProfilePicture: async (req, res, next) => {
     var picture = await pictureModel.findProfile("user_id", req.params.user_id);
     if (!picture) picture = null;
@@ -564,16 +513,6 @@ module.exports = {
     return res.status(200).json({ profiles_liked: profilesLiked });
   },
 
-  getUserProfilesBlockedId: async (req, res, next) => {
-    var user_id = req.params.user_id;
-    var profilesBlocked = await userModel.getBlockedUsersFromMyId(user_id);
-
-    if (profilesBlocked.error)
-      return res.status(401).json({ error: profilesBlocked.error });
-    if (!profilesBlocked) profilesBlocked = null;
-
-    return res.status(200).json({ profiles_blocked: profilesBlocked });
-  },
 
   getUserListProfileDataFromId: async (req, res, next) => {
     var userId = req.params.user_id;

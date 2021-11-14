@@ -1,5 +1,5 @@
 {
-  "name": "matcha",
+  "name": "sheconnect",
   "version": "1.0.0",
   "description": "Creating a dating site using React, Node JS and Mysql",
   "main": "./routes/server.js",
@@ -9,8 +9,6 @@
     "front": "cd ../front && npm start",
     "dev": "concurrently --kill-others \"npm run server\" \"npm run front\""
   },
-  "author": "ralleman, lcordeno",
-  "license": "MIT",
   "dependencies": {
     "@google/maps": "^0.5.5",
     "body-parser": "^1.19.0",

@@ -259,54 +259,6 @@ module.exports = {
     }
   },
 
-  increaseScore: async (score, target_id) => {
-    try {
-      var result = await pool.query({
-        sql: "UPDATE users SET pop_score = pop_score + ? WHERE `id`= ?",
-        values: [score, target_id]
-      });
-      return result.affectedRows;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  decreaseScore: async (score, target_id) => {
-    try {
-      var result = await pool.query({
-        sql: "UPDATE users SET pop_score = pop_score - ? WHERE `id`= ?",
-        values: [score, target_id]
-      });
-      return result.affectedRows;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  resetUserScore: async target_id => {
-    try {
-      var result = await pool.query({
-        sql: "UPDATE users SET pop_score = 0 WHERE `id`= ?",
-        values: [target_id]
-      });
-      return result.affectedRows;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  reportUser: async data => {
-    try {
-      var result = await pool.query({
-        sql: "INSERT INTO report (user_id, reporting_id) VALUES (?)",
-        values: [data]
-      });
-      return result.affectedRows;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
   getUserRoomId: async (user_id, target_id) => {
     try {
       var result = await pool.query({
@@ -320,75 +272,11 @@ module.exports = {
     }
   },
 
-  checkUserIsReported: async (user_id, target_id) => {
-    try {
-      var result = await pool.query({
-        sql: "SELECT * FROM report WHERE user_id = ? AND reporting_id = ?",
-        values: [target_id, user_id]
-      });
-      if (result.length > 0) return true;
-      return false;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  blockUser: async (user_id, target_id) => {
-    try {
-      var result = await pool.query({
-        sql: "INSERT INTO block (user_id, blocking_id) VALUES (?, ?)",
-        values: [target_id, user_id]
-      });
-      if (result.affectedRows > 0) return true;
-      return false;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  checkUserIsBlocked: async (user_id, target_id) => {
-    try {
-      var result = await pool.query({
-        sql: "SELECT * FROM block WHERE user_id = ? AND blocking_id = ?",
-        values: [target_id, user_id]
-      });
-      if (result.length > 0) return true;
-      return false;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  unblockUser: async (user_id, target_id) => {
-    try {
-      var result = await pool.query({
-        sql: "DELETE FROM block WHERE user_id = ? AND blocking_id = ?",
-        values: [target_id, user_id]
-      });
-      if (result.affectedRows > 0) return false;
-      return true;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
-  getBlockedUsersFromMyId: async user_id => {
-    try {
-      var result = await pool.query({
-        sql: "SELECT user_id FROM block WHERE blocking_id = ?",
-        values: [user_id]
-      });
-      if (result) return result;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
-
   getList: async () => {
     try {
       var result = await pool.query({
         sql:
-          "SELECT id, username, firstname, lastname, gender, online, pop_score, sexual_orientation, city, bio, birthdate, last_connexion FROM users WHERE id > 13270 LIMIT 12",
+          "SELECT id, username, firstname, lastname, gender, online, pop_score, city, bio, birthdate, last_connexion FROM users WHERE id > 13270 LIMIT 12",
         values: []
       });
       if (result) return result;
@@ -401,7 +289,7 @@ module.exports = {
     try {
       var result = await pool.query({
         sql:
-          "SELECT id, username, firstname, lastname, gender, online, pop_score, sexual_orientation, city, profile_picture_url, bio, birthdate, geo_lat, geo_long, last_connexion, pop_max, tags FROM users WHERE (gender = ? OR gender = ?) AND (sexual_orientation = ? OR sexual_orientation = ?) AND (geo_lat BETWEEN ? AND ?) AND (geo_long BETWEEN ? AND ?) AND `id` NOT IN (SELECT user_id FROM block WHERE blocking_id = ?) AND `id` != ?;",
+          "SELECT id, username, firstname, lastname, gender, online, pop_score, city, profile_picture_url, bio, birthdate, geo_lat, geo_long, last_connexion, pop_max, tags FROM users WHERE (gender = ? OR gender = ?) AND (geo_lat BETWEEN ? AND ?) AND (geo_long BETWEEN ? AND ?) AND `id` NOT IN (SELECT user_id FROM block WHERE blocking_id = ?) AND `id` != ?;",
         values: [
           g1,
           g2,
@@ -421,24 +309,9 @@ module.exports = {
     }
   },
 
-  getSuggestionsIfBi: async (g1, g2, range, uid) => {
-    try {
-      var result = await pool.query({
-        sql:
-          "SELECT id, username, firstname, lastname, gender, online, pop_score, sexual_orientation, city, profile_picture_url, bio, birthdate, geo_lat, geo_long, last_connexion, pop_max, tags FROM users WHERE (sexual_orientation = 1 OR (sexual_orientation = 3 AND gender = ?) OR (sexual_orientation = 2 AND gender = ?)) AND (geo_lat BETWEEN ? AND ?) AND (geo_long BETWEEN ? AND ?) AND `id` NOT IN (SELECT user_id FROM block WHERE blocking_id = ?) AND `id` != ?;",
-        values: [g1, g2, range[0], range[1], range[2], range[3], uid, uid]
-      });
-      if (result) return result;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
 
   searchResults: async (
     gender,
-    sexOrient,
-    ageMin,
-    ageMax,
     range,
     popMin,
     popMax,
@@ -447,12 +320,9 @@ module.exports = {
     try {
       var result = await pool.query({
         sql:
-          "SELECT id, username, firstname, lastname, gender, online, pop_score, sexual_orientation, city, profile_picture_url, bio, birthdate, geo_lat, geo_long, last_connexion, pop_max, tags FROM users WHERE (gender = ?) AND (sexual_orientation = ?) AND ((SELECT YEAR(birthdate)) BETWEEN ? AND ?) AND (geo_lat BETWEEN ? AND ?) AND (geo_long BETWEEN ? AND ?) AND (pop_score BETWEEN ? AND ?) AND `id` NOT IN (SELECT user_id FROM block WHERE blocking_id = ?) AND `id` != ?;",
+          "SELECT id, username, firstname, lastname, gender, online, pop_score, city, profile_picture_url, bio, birthdate, geo_lat, geo_long, last_connexion, pop_max, tags FROM users WHERE (gender = ?) AND ((SELECT YEAR(birthdate)) BETWEEN ? AND ?) AND (geo_lat BETWEEN ? AND ?) AND (geo_long BETWEEN ? AND ?) AND (pop_score BETWEEN ? AND ?) AND `id` NOT IN (SELECT user_id FROM block WHERE blocking_id = ?) AND `id` != ?;",
         values: [
           gender,
-          sexOrient,
-          ageMax,
-          ageMin,
           range[0],
           range[1],
           range[2],
